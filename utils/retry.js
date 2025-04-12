@@ -2,44 +2,44 @@ const logger = require('./logger');
 
 class RetryHandler {
     constructor(options = {}) {
-        this.maxRetries = options.maxRetries || 5;
-        this.initialDelay = options.initialDelay || 1000; // 1 second
-        this.maxDelay = options.maxDelay || 30000; // 30 seconds
+        this.maxRetries = options.maxRetries || 3;
+        this.initialDelay = options.initialDelay || 30000; // 30 segundos
+        this.maxDelay = options.maxDelay || 120000; // 2 minutos
         this.factor = options.factor || 2;
         this.jitter = options.jitter || 0.1;
+        this.currentRetry = 0;
     }
 
-    async execute(operation, context = '') {
-        let attempt = 0;
-        let delay = this.initialDelay;
-
-        while (attempt < this.maxRetries) {
+    async execute(operation, description = '') {
+        while (this.currentRetry < this.maxRetries) {
             try {
-                logger.info(`Attempt ${attempt + 1}/${this.maxRetries} - ${context}`);
                 return await operation();
             } catch (error) {
-                attempt++;
-                
-                if (attempt === this.maxRetries) {
-                    logger.error(`Final attempt failed - ${context}`, { error: error.message });
+                this.currentRetry++;
+                if (this.currentRetry >= this.maxRetries) {
                     throw error;
                 }
 
-                // Calculate next delay with jitter
-                const jitterAmount = delay * this.jitter * (Math.random() * 2 - 1);
-                const nextDelay = Math.min(delay + jitterAmount, this.maxDelay);
-
-                logger.warn(`Attempt ${attempt} failed, retrying in ${Math.round(nextDelay/1000)}s - ${context}`, {
-                    error: error.message,
-                    nextDelay: nextDelay,
-                    attempt: attempt
-                });
-
-                await new Promise(resolve => setTimeout(resolve, nextDelay));
-                delay *= this.factor;
+                const delay = this.calculateDelay();
+                console.log(`Retry ${this.currentRetry}/${this.maxRetries} for ${description} after ${delay/1000} seconds`);
+                await new Promise(resolve => setTimeout(resolve, delay));
             }
         }
     }
+
+    calculateDelay() {
+        const delay = Math.min(
+            this.initialDelay * Math.pow(this.factor, this.currentRetry - 1),
+            this.maxDelay
+        );
+        const jitter = delay * this.jitter;
+        return delay + (Math.random() * jitter * 2 - jitter);
+    }
+
+    reset() {
+        this.currentRetry = 0;
+    }
 }
 
+module.exports = RetryHandler; 
 module.exports = RetryHandler; 
