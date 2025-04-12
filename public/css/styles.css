@@ -5,11 +5,10 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    display: none;
 }
 
 .spinner {
@@ -36,23 +35,87 @@
     transition: all 0.3s ease;
 }
 
+/* Estilos para o QR Code */
+.qr-code-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 1rem auto;
+    width: 300px;
+    height: 300px;
+}
+
+.qr-code-wrapper canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 300px;
+    max-height: 300px;
+    display: block;
+    margin: 0 auto;
+}
+
+#qrCodeContainer {
+    text-align: center;
+    margin: 1rem 0;
+}
+
+#qrCodeContainer p {
+    margin-top: 1rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* Estilos para os estados de conexão */
 .status-badge {
-    font-size: 14px;
-    padding: 8px 16px;
-    border-radius: 20px;
-    margin-bottom: 20px;
-}
-
-.status-badge.connected {
-    background-color: #28a745;
-    color: white;
-}
-
-.status-badge.disconnected {
-    background-color: #dc3545;
-    color: white;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
 }
 
 .status-badge i {
-    margin-right: 5px;
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.status-badge.connected {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-badge.authenticating {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+.status-badge.disconnected {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Estilos para o formulário */
+#messageForm {
+    margin-top: 1.5rem;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Estilos para alertas */
+.alert {
+    margin-top: 1rem;
+    border-radius: 8px;
+    padding: 1rem;
 } 
